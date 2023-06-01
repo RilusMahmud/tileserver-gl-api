@@ -16,6 +16,7 @@ import handlebars from 'handlebars';
 import SphericalMercator from '@mapbox/sphericalmercator';
 const mercator = new SphericalMercator();
 import morgan from 'morgan';
+import axios from 'axios';
 import { serve_data } from './serve_data.js';
 import { serve_style } from './serve_style.js';
 import { serve_font } from './serve_font.js';
@@ -52,7 +53,7 @@ function start(opts) {
 
   if (process.env.NODE_ENV !== 'test') {
     const defaultLogFormat =
-      process.env.NODE_ENV === 'production' ? 'tiny' : 'dev';
+      process.env.NODE_ENV === 'production' ? 'combined' : 'dev';
     const logFormat = opts.logFormat || defaultLogFormat;
     app.use(
       morgan(logFormat, {
@@ -162,6 +163,32 @@ function start(opts) {
   if (opts.cors) {
     app.use(cors());
   }
+
+  /**
+   *
+   * @param api_key
+   */
+  async function chechKey(api_key) {
+    try {
+      const url = `${process.env.AUTH_BASE_URL}/api/validation?api_key=${api_key}`;
+      const response = await axios.get(url);
+      return response.data.is_valid;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  // validation middleware for access tokens
+  app.use('/', async (req, res, next) => {
+    if (!req.query.key) {
+      return res.status(401).send('Missing access token');
+    }
+    const isValid = await chechKey(req.query.key);
+    if (!isValid) {
+      return res.status(401).send('Invalid access token');
+    }
+    next();
+  });
 
   app.use('/data/', serve_data.init(options, serving.data));
   app.use('/styles/', serve_style.init(options, serving.styles));

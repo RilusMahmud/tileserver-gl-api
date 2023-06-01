@@ -6,29 +6,29 @@ RUN set -ex; \
     export DEBIAN_FRONTEND=noninteractive; \
     apt-get -qq update; \
     apt-get -y --no-install-recommends install \
-      build-essential \
-      ca-certificates \
-      wget \
-      pkg-config \
-      xvfb \
-      libglfw3-dev \
-      libuv1-dev \
-      libjpeg-turbo8 \
-      libicu66 \
-      libcairo2-dev \
-      libpango1.0-dev \
-      libjpeg-dev \
-      libgif-dev \
-      librsvg2-dev \
-      gir1.2-rsvg-2.0 \
-      librsvg2-2 \
-      librsvg2-common \
-      libcurl4-openssl-dev \
-      libpixman-1-dev \
-      libpixman-1-0; \
-      apt-get -y --purge autoremove; \
-      apt-get clean; \
-      rm -rf /var/lib/apt/lists/*;
+    build-essential \
+    ca-certificates \
+    wget \
+    pkg-config \
+    xvfb \
+    libglfw3-dev \
+    libuv1-dev \
+    libjpeg-turbo8 \
+    libicu66 \
+    libcairo2-dev \
+    libpango1.0-dev \
+    libjpeg-dev \
+    libgif-dev \
+    librsvg2-dev \
+    gir1.2-rsvg-2.0 \
+    librsvg2-2 \
+    librsvg2-common \
+    libcurl4-openssl-dev \
+    libpixman-1-dev \
+    libpixman-1-0; \
+    apt-get -y --purge autoremove; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*;
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -55,7 +55,8 @@ FROM ubuntu:focal AS final
 ENV \
     NODE_ENV="production" \
     CHOKIDAR_USEPOLLING=1 \
-    CHOKIDAR_INTERVAL=500
+    CHOKIDAR_INTERVAL=500 \
+    AUTH_BASE_URL="https://geoserver.bmapsbd.com"
 
 RUN set -ex; \
     export DEBIAN_FRONTEND=noninteractive; \
@@ -63,23 +64,23 @@ RUN set -ex; \
     useradd -r -g node node; \
     apt-get -qq update; \
     apt-get -y --no-install-recommends install \
-      ca-certificates \
-      wget \
-      xvfb \
-      libglfw3 \
-      libuv1 \
-      libjpeg-turbo8 \
-      libicu66 \
-      libcairo2 \
-      libgif7 \
-      libopengl0 \
-      libpixman-1-0 \
-      libcurl4 \
-      librsvg2-2 \
-      libpango-1.0-0; \
-      apt-get -y --purge autoremove; \
-      apt-get clean; \
-      rm -rf /var/lib/apt/lists/*;
+    ca-certificates \
+    wget \
+    xvfb \
+    libglfw3 \
+    libuv1 \
+    libjpeg-turbo8 \
+    libicu66 \
+    libcairo2 \
+    libgif7 \
+    libopengl0 \
+    libpixman-1-0 \
+    libcurl4 \
+    librsvg2-2 \
+    libpango-1.0-0; \
+    apt-get -y --purge autoremove; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*;
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
